@@ -4,9 +4,12 @@
  * Module dependencies.
  */
 require("dotenv").config();
+const fs = require("fs");
+const path = require("path");
 const app = require("../app");
 const debug = require("debug")("demoexpressjs:server");
-const http = require("http");
+// const http = require("http");
+const https = require("https");
 
 /**
  * Get port from environment and store in Express.
@@ -19,7 +22,13 @@ app.set("port", port);
  * Create HTTP server.
  */
 
-var server = http.createServer(app);
+const credentials = {
+  key: fs.readFileSync(path.resolve("./certs/key.pem")),
+  cert: fs.readFileSync(path.resolve("./certs/cert.pem")),
+};
+
+server = https.createServer(credentials, app);
+// var server = http.createServer(app);
 
 /**
  * Listen on provided port, on all network interfaces.
